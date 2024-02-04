@@ -1,0 +1,15 @@
+host: "localhost"
+port: 5432
+user: "yourusername"
+password: "yourpassword"
+dbname: "yourdbname"
+
+messages:
+  response:
+    start: "Hello! Finally... Did you decide to track your expense?"
+    already_authorized: "You have already been authorized."
+    unknown_command: "Unknown command. Check if you did a typo."
+    link_saved: "The link have been saved."
+  error:
+    default: "Error was occurred."
+    unable_to_save: "Unable to save. Please, try again..."
