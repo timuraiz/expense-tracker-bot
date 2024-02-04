@@ -8,9 +8,6 @@ build:
 run: build
 	./.bin/bot
 
-
-
-
 run-db:
 	docker run -d --name expense-tracker-bot \
                   -e POSTGRES_HOST=$(HOST) \
@@ -23,3 +20,6 @@ run-db:
 
 open-psql:
 	docker exec -it expense-tracker-bot psql -U $(USER) -d $(DBNAME)
+
+stop-db:
+	docker stop expense-tracker-bot && docker rm expense-tracker-bot
