@@ -8,38 +8,36 @@ import (
 	"time"
 )
 
-type User interface {
-	Authenticate(userID, password string) (bool, error)
-}
-
-type Expense interface {
-	AddExpense(expense ExpenseDetail) (string, error) // Returns ExpenseID on success
+type Crud interface {
+	AddExpense(expense ExpenseDetail) (int, error) // Returns ExpenseID on success
 	EditExpense(expenseID string, expense ExpenseDetail) error
 	DeleteExpense(expenseID string) error
 }
 
 type ExpenseDetail struct {
-	UserID      string
+	UserID      int64
 	Amount      float64
 	Category    string
 	Date        time.Time
-	Currency    string
 	Description string
-	Tags        []string
 }
 
-func ConnectDB(cfg *config.Config) (*sql.DB, error) {
-	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
+func SetupDatabase(cfg *config.Config) (*sql.DB, error) {
 
-	db, err := sql.Open(cfg.Driver, sqlInfo)
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
+
+	// Open the connection
+	db, err := sql.Open(cfg.Driver, connStr)
 	if err != nil {
 		return nil, err
 	}
 
+	// Check the connection
 	err = db.Ping()
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("Successfully connected to the database!")
 	return db, nil
 }

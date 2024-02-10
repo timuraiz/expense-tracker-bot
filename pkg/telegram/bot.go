@@ -1,18 +1,18 @@
 package telegram
 
 import (
-	"database/sql"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/timuraiz/expense-tracker-bot/pkg/config"
+	"github.com/timuraiz/expense-tracker-bot/pkg/storage"
 )
 
 type Bot struct {
 	bot *tgbotapi.BotAPI
-	db  *sql.DB
+	db  storage.Crud
 	cfg *config.Config
 }
 
-func NewBot(bot *tgbotapi.BotAPI, db *sql.DB, cfg *config.Config) *Bot {
+func NewBot(bot *tgbotapi.BotAPI, db storage.Crud, cfg *config.Config) *Bot {
 	return &Bot{
 		bot: bot,
 		db:  db,

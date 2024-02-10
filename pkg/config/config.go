@@ -27,6 +27,7 @@ type Responses struct {
 	Start             string `mapstructure:"start"`
 	AlreadyAuthorized string `mapstructure:"already_authorized"`
 	UnknownCommand    string `mapstructure:"unknown_command"`
+	ExpenseSaved      string `mapstructure:"expense_saved"`
 }
 
 type Errors struct {
