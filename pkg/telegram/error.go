@@ -6,15 +6,18 @@ import (
 )
 
 var (
-	unableToSaveError = errors.New("unable to save link to Pocket")
+	unableToSaveExpenseError  = errors.New("unable to save expense")
+	unableToParseExpenseError = errors.New("unable to parse expense")
 )
 
 func (b *Bot) handleError(chatID int64, err error) {
 	var messageText string
 
 	switch err {
-	case unableToSaveError:
+	case unableToSaveExpenseError:
 		messageText = b.cfg.Errors.UnableToSave
+	case unableToParseExpenseError:
+		messageText = b.cfg.Errors.UnableToParse
 	default:
 		messageText = b.cfg.Errors.Default
 	}

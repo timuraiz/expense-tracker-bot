@@ -31,8 +31,9 @@ type Responses struct {
 }
 
 type Errors struct {
-	Default      string `mapstructure:"default"`
-	UnableToSave string `mapstructure:"unable_to_save"`
+	Default       string `mapstructure:"default"`
+	UnableToSave  string `mapstructure:"unable_to_save"`
+	UnableToParse string `mapstructure:"unable_to_parse"`
 }
 
 func Init() (*Config, error) {

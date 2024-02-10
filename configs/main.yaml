@@ -13,3 +13,4 @@ messages:
   error:
     default: "Error was occurred."
     unable_to_save: "Unable to save. Please, try again..."
+    unable_to_parse: "Unable to parse. Please, check what you typed..."
