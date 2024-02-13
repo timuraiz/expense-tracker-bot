@@ -15,13 +15,13 @@ func (b *Bot) handleError(chatID int64, err error) {
 
 	switch err {
 	case unableToSaveExpenseError:
-		messageText = b.cfg.Errors.UnableToSave
+		messageText = b.Cfg.Errors.UnableToSave
 	case unableToParseExpenseError:
-		messageText = b.cfg.Errors.UnableToParse
+		messageText = b.Cfg.Errors.UnableToParse
 	default:
-		messageText = b.cfg.Errors.Default
+		messageText = b.Cfg.Errors.Default
 	}
 
 	msg := tgbotapi.NewMessage(chatID, messageText)
-	b.bot.Send(msg)
+	b.Bot.Send(msg)
 }
