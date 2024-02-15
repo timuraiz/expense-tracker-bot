@@ -2,25 +2,24 @@ package telegram
 
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/timuraiz/expense-tracker-bot/pkg/telegram/session"
 )
 
 var (
-	firstAttempt State = "firstAttempt"
+	first = session.NewState("first")
 )
 
-func handleStartCommand(b *Bot, message *tgbotapi.Message, state *State) (*State, error) {
-	var err error
-	switch {
-	case state == nil:
+func handleStartCommand(b *Bot, message *tgbotapi.Message) error {
+
+	userSession, err := b.Session.GetSession(message.Chat.ID)
+	if err != nil {
+		b.handleError(message.Chat.ID, err)
+	}
+	switch userSession.State.GetName() {
+	case first.GetName():
 		msg := tgbotapi.NewMessage(message.Chat.ID, b.Cfg.Responses.Start)
 		_, err = b.Bot.Send(msg)
-		state = &firstAttempt
-	case *state == firstAttempt:
-		msg := tgbotapi.NewMessage(message.Chat.ID, "You have already called this command")
-		_, err = b.Bot.Send(msg)
-		state = nil
+		userSession.SetState(first)
 	}
-	//msg := tgbotapi.NewMessage(message.Chat.ID, b.Cfg.Responses.Start)
-	//_, err := b.Bot.Send(msg)
-	return state, err
+	return err
 }

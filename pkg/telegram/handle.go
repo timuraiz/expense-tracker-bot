@@ -9,10 +9,10 @@ const (
 	commandAddExpense = "add_expense"
 )
 
-func (b *Bot) handleCommand(message *tgbotapi.Message, state *State) (*State, error) {
+func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	switch message.Command() {
 	case commandStart:
-		return handleStartCommand(b, message, state)
+		return handleStartCommand(b, message)
 		//case commandAddExpense:
 		//	return commands.HandleAddExpenseCommand(b, message, state)
 		//default:

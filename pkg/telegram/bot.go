@@ -4,26 +4,24 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/timuraiz/expense-tracker-bot/pkg/config"
 	"github.com/timuraiz/expense-tracker-bot/pkg/storage"
+	"github.com/timuraiz/expense-tracker-bot/pkg/telegram/session"
 )
 
 type Bot struct {
 	Bot *tgbotapi.BotAPI
 	Db  storage.Crud
 	Cfg *config.Config
+	session.Session
 }
 
-var UserStates map[int64]*State
-
-func NewBot(bot *tgbotapi.BotAPI, db storage.Crud, cfg *config.Config) *Bot {
-	UserStates = make(map[int64]*State)
+func NewBot(bot *tgbotapi.BotAPI, db storage.Crud, cfg *config.Config, session session.Session) *Bot {
 	return &Bot{
-		Bot: bot,
-		Db:  db,
-		Cfg: cfg,
+		Bot:     bot,
+		Db:      db,
+		Cfg:     cfg,
+		Session: session,
 	}
 }
-
-type State string
 
 func (b *Bot) Start() error {
 	u := tgbotapi.NewUpdate(0)
@@ -36,14 +34,15 @@ func (b *Bot) Start() error {
 			continue
 		}
 		chatId := update.Message.Chat.ID
-		var state *State
 
-		state = UserStates[chatId]
+		state, err := b.Session.GetSession(chatId)
+		if err != nil {
+			b.handleError(chatId, err)
+		}
 
 		// Handle commands
 		if update.Message.IsCommand() {
-			state, err := b.handleCommand(update.Message, state)
-			UserStates[chatId] = state
+			err := b.handleCommand(update.Message, state)
 			if err != nil {
 				b.handleError(chatId, err)
 			}
