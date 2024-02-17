@@ -10,15 +10,16 @@ func NewInMemorySessionStorage() *InMemorySessionStorage {
 	}
 }
 
-func (s *InMemorySessionStorage) GetSession(userID int64) *UserSession {
+func (s *InMemorySessionStorage) GetSession(userID int64) (*UserSession, error) {
 	if session, exists := s.sessions[userID]; exists {
-		return session
+		return session, nil
 	}
 	session := NewUserSession(userID)
-	s.sessions[userID] = session
-	return session
+	s.SaveSession(session)
+	return session, nil
 }
 
-func (s *InMemorySessionStorage) SaveSession(session *UserSession) {
+func (s *InMemorySessionStorage) SaveSession(session *UserSession) error {
 	s.sessions[session.UserID] = session
+	return nil
 }

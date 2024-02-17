@@ -8,18 +8,18 @@ import (
 )
 
 type Bot struct {
-	Bot *tgbotapi.BotAPI
-	Db  storage.Crud
-	Cfg *config.Config
-	session.Session
+	Bot            *tgbotapi.BotAPI
+	Db             storage.Crud
+	Cfg            *config.Config
+	SessionStorage session.Session
 }
 
 func NewBot(bot *tgbotapi.BotAPI, db storage.Crud, cfg *config.Config, session session.Session) *Bot {
 	return &Bot{
-		Bot:     bot,
-		Db:      db,
-		Cfg:     cfg,
-		Session: session,
+		Bot:            bot,
+		Db:             db,
+		Cfg:            cfg,
+		SessionStorage: session,
 	}
 }
 
@@ -33,25 +33,8 @@ func (b *Bot) Start() error {
 		if update.Message == nil { // ignore any non-Message Updates
 			continue
 		}
-		chatId := update.Message.Chat.ID
 
-		state, err := b.Session.GetSession(chatId)
-		if err != nil {
-			b.handleError(chatId, err)
-		}
-
-		// Handle commands
-		if update.Message.IsCommand() {
-			err := b.handleCommand(update.Message, state)
-			if err != nil {
-				b.handleError(chatId, err)
-			}
-
-			continue
-		}
-
-		// Handle regular messages
-		if err := b.handleMessage(update.Message); err != nil {
+		if err := b.handleCommand(update.Message); err != nil {
 			b.handleError(update.Message.Chat.ID, err)
 		}
 	}

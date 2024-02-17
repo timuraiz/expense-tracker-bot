@@ -28,6 +28,8 @@ type Responses struct {
 	AlreadyAuthorized string `mapstructure:"already_authorized"`
 	UnknownCommand    string `mapstructure:"unknown_command"`
 	ExpenseSaved      string `mapstructure:"expense_saved"`
+	ExpenseCategory   string `mapstructure:"expense_category"`
+	ExpenseMoneyCost  string `mapstructure:"expense_money_cost"`
 }
 
 type Errors struct {

@@ -14,20 +14,22 @@ func NewState(name string) State {
 	}
 }
 
+var NullState = NewState("")
+
 type UserSession struct {
 	UserID int64 // Telegram user ID
-	State  State
+	State  *State
 	Data   map[string]interface{} // Store additional data needed for the conversation
 }
 
-func (s *UserSession) SetState(state State) {
+func (s *UserSession) SetState(state *State) {
 	s.State = state
 }
 
 func NewUserSession(userID int64) *UserSession {
 	return &UserSession{
 		UserID: userID,
-		State:  State{},
+		State:  &NullState,
 		Data:   make(map[string]interface{}),
 	}
 }

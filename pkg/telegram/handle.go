@@ -9,16 +9,32 @@ const (
 	commandAddExpense = "add_expense"
 )
 
+type HandlerFunc func(*Bot, *tgbotapi.Message) error
+
+var stateHandlers = map[string]HandlerFunc{
+	first.GetName(): handleStartCommand,
+}
+var commandHandlers = map[string]HandlerFunc{
+	commandStart:      handleStartCommand,
+	commandAddExpense: handleAddExpenseCommand,
+}
+
 func (b *Bot) handleCommand(message *tgbotapi.Message) error {
-	switch message.Command() {
-	case commandStart:
-		return handleStartCommand(b, message)
-		//case commandAddExpense:
-		//	return commands.HandleAddExpenseCommand(b, message, state)
-		//default:
-		//	return commands.HandleUnknownCommand(b, message, state)
+	userSession, err := b.SessionStorage.GetSession(message.Chat.ID)
+	if err != nil {
+		return err
 	}
-	return nil, nil
+
+	currState := userSession.State
+	if f, exists := stateHandlers[currState.GetName()]; exists {
+		return f(b, message)
+	}
+
+	f, exists := commandHandlers[message.Command()]
+	if !exists {
+		return handleUnknownCommand(b, message)
+	}
+	return f(b, message)
 }
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) error {

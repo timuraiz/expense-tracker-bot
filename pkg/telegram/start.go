@@ -11,15 +11,20 @@ var (
 
 func handleStartCommand(b *Bot, message *tgbotapi.Message) error {
 
-	userSession, err := b.Session.GetSession(message.Chat.ID)
+	userSession, err := b.SessionStorage.GetSession(message.Chat.ID)
 	if err != nil {
 		b.handleError(message.Chat.ID, err)
 	}
 	switch userSession.State.GetName() {
 	case first.GetName():
+		msg := tgbotapi.NewMessage(message.Chat.ID, "You?? Again??")
+		_, err = b.Bot.Send(msg)
+		userSession.SetState(&session.NullState)
+	default:
 		msg := tgbotapi.NewMessage(message.Chat.ID, b.Cfg.Responses.Start)
 		_, err = b.Bot.Send(msg)
-		userSession.SetState(first)
+		userSession.SetState(&first)
+
 	}
 	return err
 }

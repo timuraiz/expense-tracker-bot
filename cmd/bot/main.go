@@ -6,6 +6,7 @@ import (
 	"github.com/timuraiz/expense-tracker-bot/pkg/storage"
 	"github.com/timuraiz/expense-tracker-bot/pkg/storage/postgre"
 	"github.com/timuraiz/expense-tracker-bot/pkg/telegram"
+	"github.com/timuraiz/expense-tracker-bot/pkg/telegram/session"
 	"log"
 )
 
@@ -30,8 +31,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	bot := telegram.NewBot(botApi, repo, cfg)
+	sessionStorage := session.NewInMemorySessionStorage()
+	bot := telegram.NewBot(botApi, repo, cfg, sessionStorage)
 	if err := bot.Start(); err != nil {
 		log.Panic(err)
 	}

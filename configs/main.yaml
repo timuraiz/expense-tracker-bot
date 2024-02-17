@@ -10,6 +10,8 @@ messages:
     already_authorized: "You have already been authorized."
     unknown_command: "Unknown command. Check if you did a typo."
     expense_saved: "Expense has been  saved👌🏻"
+    expense_category: "What is category of your expense?"
+    expense_money_cost: "What is cost of your expense?"
   error:
     default: "Error was occurred."
     unable_to_save: "Unable to save. Please, try again..."
