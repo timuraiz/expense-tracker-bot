@@ -26,6 +26,13 @@ func (s *UserSession) SetState(state *State) {
 	s.State = state
 }
 
+func (s *UserSession) ReleaseState() {
+	for key := range s.Data {
+		delete(s.Data, key)
+	}
+	s.SetState(&NullState)
+}
+
 func NewUserSession(userID int64) *UserSession {
 	return &UserSession{
 		UserID: userID,

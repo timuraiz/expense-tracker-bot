@@ -13,6 +13,9 @@ type HandlerFunc func(*Bot, *tgbotapi.Message) error
 
 var stateHandlers = map[string]HandlerFunc{
 	first.GetName(): handleStartCommand,
+
+	askMoneyCost.GetName(): handleAddExpenseCommand,
+	saveExpense.GetName():  handleAddExpenseCommand,
 }
 var commandHandlers = map[string]HandlerFunc{
 	commandStart:      handleStartCommand,
@@ -26,7 +29,8 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) error {
 	}
 
 	currState := userSession.State
-	if f, exists := stateHandlers[currState.GetName()]; exists {
+
+	if f, exists := stateHandlers[currState.GetName()]; exists && !message.IsCommand() {
 		return f(b, message)
 	}
 

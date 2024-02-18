@@ -13,7 +13,7 @@ func handleStartCommand(b *Bot, message *tgbotapi.Message) error {
 
 	userSession, err := b.SessionStorage.GetSession(message.Chat.ID)
 	if err != nil {
-		b.handleError(message.Chat.ID, err)
+		return unableToReachUserSessionError
 	}
 	switch userSession.State.GetName() {
 	case first.GetName():
